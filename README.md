@@ -229,3 +229,20 @@ ${i["name"]} ansible_host=${i["network_interface"][0]["nat_ip_address"] platform
 
 ### Задание 3
 
+
+Вот интересно, что структуру созданных дисков можно было перебрать через ``` for_each = yandex_compute_disk.disks ``` 
+```hcl
+  dynamic "secondary_disk" {
+    for_each = yandex_compute_disk.disks
+    content {
+      disk_id = secondary_disk.value.id
+    }
+  }
+```
+
+Хотя это **tuple([object({}), object({}), ...])**  и мне кажется это странно, ведь у нас for_each умеет только в set и map.
+
+Решение:
+[ansver](./img/tf-03.1.0.png)
+
+сам код: [disk_vm.tf](./src/disk_vm.tf)
