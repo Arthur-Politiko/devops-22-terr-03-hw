@@ -4,47 +4,44 @@ variable "web_provision" {
   description = "ansible provision switch variable"
 }
 
-# locals {
-#   vms = [for i in netology-develop-platform-web : "netology-develop-platform-web-${i}"]
-# }
-
 locals {
-  # instance_groups = [
-  #    yandex_compute_instance.web.*,
-  #    yandex_compute_instance.db.*,
-  #    yandex_compute_instance.storage.*
-  # ]
+  vms = {
+    #webservers = length(yandex_compute_instance.web) == 0 ? {} : { for i in yandex_compute_instance.web: i.name => i},
+    #databases = length(yandex_compute_instance.db) == 0 ? {} : {for k, v in yandex_compute_instance.db: k => v },
+    #storage = can(yandex_compute_instance.storage) && length(yandex_compute_instance.storage) == 0 ? {} : { for i in yandex_compute_instance.storage: i.name => i},
+    webservers = length(yandex_compute_instance.web) == 0 ? {} : { for i in yandex_compute_instance.web: i.name => i},
+    #databases = yandex_compute_instance.db,
+    databases = length(yandex_compute_instance.db) == 0 ? {} : {for k, v in yandex_compute_instance.db: k => v },
+    #storage = yandex_compute_instance.storage,
+    storage = length(yandex_compute_instance.storage.*) == 0 ? {} : { for i in yandex_compute_instance.storage.*: i.name => i},
+  }
 
-  # webservers = { for i in local.instance_groups[0] : key(i) => i if length(i) > 0 }
 
-  webservers = concat(
-    length(yandex_compute_instance.web) == 0 ? [] : yandex_compute_instance.db.*, 
-    length(yandex_compute_instance.db) == 0 ? [] : yandex_compute_instance.db.*,
+
+  vms_flat = concat(
+    length(yandex_compute_instance.web) == 0 ? [] : 
+      [for i in yandex_compute_instance.web: i], 
+    length(yandex_compute_instance.db) == 0 ? [] : 
+      [for i in yandex_compute_instance.db: i],
     length(yandex_compute_instance.storage) == 0 ? [] : yandex_compute_instance.storage.*,
   )
 
 }
 
 output "instance_groups" {
-  value = local.webservers
+  value = local.vms_flat
 }
 
-locals {
-  # instance_groups = {
-  #   web = yandex_compute_instance.web
-  #   db  = yandex_compute_instance.db
-  #   storage = yandex_compute_instance.storage
-  # }
-
-  # webservers = { for i in yandex_compute_instance.web : i.name => i }
+output "vms" {
+  value = local.vms
 }
 
 resource "local_file" "inventory" {
   depends_on = [ yandex_compute_instance.web, yandex_compute_instance.db, yandex_compute_instance.storage ]
 
   content = templatefile("./hosts.tftpl",
-    # groups = [ for i in local.instance_groups: i ]
-    local.webservers
+    #[for i in local.webservers: i ]
+    { webservers = local.vms_flat }
   )
   filename = "./inventory.ini"
 }
