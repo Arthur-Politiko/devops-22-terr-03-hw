@@ -1,0 +1,13 @@
+[
+%{~ for k,v in hcvms ~}
+%{~ for name,val in v ~}
+  {
+    "name" = "${val.name}"
+    "id"   = "${val.id}"
+    "fqdn" = "${val.fqdn}"
+  }
+    
+%{~ endfor ~}
+%{~ endfor ~}
+
+]
