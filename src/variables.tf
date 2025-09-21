@@ -84,7 +84,6 @@ variable "default_scheduling_policy_flag" {
   
 }
 
-
 #**********************************************#
 variable "web_vm_count" {
   type = number

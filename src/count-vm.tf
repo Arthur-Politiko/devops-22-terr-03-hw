@@ -7,6 +7,7 @@ data "yandex_compute_image" "web_image" {
 resource "yandex_compute_instance" "web" {
   count = var.web_vm_count
   name = "web-${count.index + 1}"
+  hostname = "web-${count.index + 1}"
   platform_id = var.default_platform_name
   zone = var.default_zone
 

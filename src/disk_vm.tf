@@ -15,6 +15,7 @@ resource "yandex_compute_disk" "disks" {
 
 resource "yandex_compute_instance" "storage" {
   name = var.storage_vm.vm_name
+  hostname = var.storage_vm.vm_name
   platform_id = var.default_platform_name
   zone = var.default_zone
   resources {

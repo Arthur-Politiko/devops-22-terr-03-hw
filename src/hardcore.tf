@@ -45,7 +45,6 @@ resource "local_file" "hc_inventory" {
   filename = "./hc_inventory.ini"
 }
 
-
 variable web_provision {
   type        = bool
   default     = true
@@ -78,7 +77,7 @@ resource "null_resource" "web_hosts_provision" {
     #SSH_IDENTITY_FILE=$(pwd)"/ssh-keys/vm-cloud-diplom"
     #SSH_COMMON_ARGS="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SSH_CONNECT_TIMEOUT"
     #SSH_KEYS="-i $SSH_IDENTITY_FILE $SSH_COMMON_ARGS"
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ${abspath(path.module)}/inv.ini ${abspath(path.module)}/test.yml"
+    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ${abspath(path.module)}/inventory.ini ${abspath(path.module)}/test.yml"
 
     #secrets pass
     #> nonsensitive(jsonencode( {for k,v in random_password.each: k=>v.result}))

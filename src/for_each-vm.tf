@@ -7,12 +7,15 @@ data "yandex_compute_image" "db_image" {
 resource "yandex_compute_instance" "db" {
   # toset не сработает, внутри объект
   # прийдётся использовать for. vm.vm_name => vm создаём map, где ключ vm_name
-  # то есть после работы for_each получаем конструкцию вида:
+  # то есть после работы for_each получаем объект вида:
   #   "main"     = { vm_name = "main", ...
   #   "replica"  = { vm_name = "replica", ...
   for_each = { for vm in var.db_vms : vm.vm_name => vm }
+  #for_each = [ for k, v in var.db_vms : v ]
 
   name = each.value.vm_name
+  hostname = each.value.vm_name
+  
   platform_id = var.default_platform_name
   zone = var.default_zone
 
