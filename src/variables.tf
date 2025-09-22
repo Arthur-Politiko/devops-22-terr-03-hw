@@ -120,3 +120,11 @@ variable "disk_list" {
   description = "List of disks"             
 
 }
+
+#**********************************************#
+variable "bastion_enable" {
+  type        = bool
+  default     = false
+  description = "Create bastion host"
+}
+
