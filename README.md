@@ -243,7 +243,7 @@ ${i["name"]} ansible_host=${i["network_interface"][0]["nat_ip_address"] platform
 Хотя это **tuple([object({}), object({}), ...])**  и мне кажется это странно, ведь у нас for_each умеет только в set и map.
 
 Решение:
-[ansver](./img/tf-03.1.0.png)
+![ansver](./img/tf-03.1.0.png)
 
 сам код: [disk_vm.tf](./src/disk_vm.tf)
 
