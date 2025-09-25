@@ -17,7 +17,6 @@ locals {
       [for i in yandex_compute_instance.db: i],
     length(yandex_compute_instance.storage) == 0 ? [] : yandex_compute_instance.storage.*,
   )
-
 }
 
 resource "local_file" "inventory" {
